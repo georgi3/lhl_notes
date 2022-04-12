@@ -1,0 +1,90 @@
+/* SQL Exercise
+====================================================================
+We will be working with database chinook.db
+You can download it here: 
+https://drive.google.com/file/d/0Bz9_0VdXvv9bWUtqM0NBYzhKZ3c/view?usp=sharing&resourcekey=0-7zGUhDz0APEfX58SA8UKog
+
+ The Chinook Database is about an imaginary video and music store.
+  Each track is stored using one of the digital formats and has a genre. 
+  The store has also some playlists, where a single track can be part of
+   several playlists. Orders are recorded for customers, but are called 
+   invoices. Every customer is assigned a support employee, and Employees 
+   report to other employees.
+*/
+
+
+-- MAKE YOURSELF FAIMLIAR WITH THE DATABASE AND TABLES HERE
+
+
+
+
+
+--==================================================================
+/* TASK I
+Which artists did not make any albums at all? Include their names in 
+your answer.
+*/
+-- SELECT artists.Name FROM artists JOIN 
+
+SELECT artists.Name FROM artists WHERE NOT EXISTS (SELECT 1 
+FROM albums WHERE artists.ArtistId=albums.ArtistId);
+
+/* TASK II
+Which artists recorded any tracks of the Latin genre?
+*/
+SELECT tracks.Composer, genres.Name FROM tracks JOIN genres
+ON genres.GenreId=tracks.GenreId WHERE 
+genres.Name = 'Latin';
+
+/* TASK III
+Which video track has the longest length?
+*/
+SELECT  media_types.Name, tracks.Milliseconds FROM media_types
+JOIN tracks ON media_types.MediaTypeId=tracks.MediaTypeId ORDER
+BY tracks.Milliseconds DESC LIMIT 1;
+
+/* TASK IV
+Find the names of customers who live in the same city as the top 
+employee (The one not managed by anyone).
+*/
+SELECT customers.FirstName, customers.LastName, customers.City,
+employees.FirstName, employees.LastName, employees.City
+FROM customers JOIN employees ON customers.City=employees.City
+ WHERE employees.ReportsTo is NULL;
+
+/* TASK V
+Find the managers of employees supporting Brazilian customers.
+*/
+SELECT DISTINCT employees.EmployeeId, employees.FirstName, employees.LastName
+FROM employees JOIN customers 
+ON customers.SupportRepId=employees.EmployeeId 
+WHERE customers.Country='Brazil';
+
+/* TASK VI
+Which playlists have no Latin tracks?
+*/
+SELECT DISTINCT playlists.Name FROM playlists JOIN playlist_track ON
+playlists.PlaylistId=playlist_track.PlaylistId WHERE 
+playlist_track.TrackId IN
+(SELECT tracks.TrackId FROM tracks JOIN genres ON 
+tracks.GenreId=genres.GenreId WHERE genres.Name='Latin');
+
+
+--STRETCH
+--==================================================================
+/* TASK I
+How many audio tracks in total were bought by German customers? And what was the total price paid for them?
+hint: use subquery to find all of tracks with their prices
+*/
+-- SELECT
+-- (SELECT tracks.TrackId, tracks.UnitPrice FROM tracks);
+
+/* TASK II
+What is the space, in bytes, occupied by the playlist “Grunge”, and how much would it cost?
+(Assume that the cost of a playlist is the sum of the price of its constituent tracks).
+*/
+
+
+/* TASK III
+List the names and the countries of those customers who are supported by an employee who was younger than 35 when hired. 
+*/

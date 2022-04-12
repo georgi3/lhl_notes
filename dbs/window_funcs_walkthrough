@@ -1,0 +1,130 @@
+-- SELECT
+-- 	ROUND(AVG (price), 2)
+-- FROM
+-- 	products;
+
+-- SELECT
+-- 	group_name,
+-- 	ROUND(AVG(price), 2)
+
+-- FROM
+-- 	products
+-- INNER JOIN product_groups USING (group_id)
+-- GROUP BY
+-- 	group_name;
+
+-- SELECT
+-- 	product_name,
+-- 	price,
+-- 	group_name,
+-- 	AVG(price) OVER (
+-- 	   PARTITION BY group_name
+-- 	)
+-- FROM
+-- 	products
+-- 	INNER JOIN 
+-- 		product_groups USING (group_id);
+
+
+-- SELECT
+-- 	product_name,
+-- 	group_name,
+-- 	price,
+-- 	ROW_NUMBER () OVER (
+-- 		PARTITION BY group_name
+-- 		ORDER BY
+-- 			price
+-- 	)
+-- FROM
+-- 	products
+-- INNER JOIN product_groups USING (group_id);
+
+-- SELECT
+-- 	product_name,
+-- 	group_name,
+--   price,
+-- 	RANK () OVER (
+-- 		PARTITION BY group_name
+-- 		ORDER BY
+-- 			price
+-- 	)
+-- FROM
+-- 	products
+-- INNER JOIN product_groups USING (group_id);
+
+
+-- SELECT
+-- 	product_name,
+-- 	group_name,
+-- 	price,
+-- 	DENSE_RANK () OVER (
+-- 		PARTITION BY group_name
+-- 		ORDER BY
+-- 			price
+-- 	)
+-- FROM
+-- 	products
+-- INNER JOIN product_groups USING (group_id);
+
+-- SELECT
+-- 	product_name,
+-- 	group_name,
+-- 	price,
+-- 	FIRST_VALUE (price) OVER (
+-- 		PARTITION BY group_name
+-- 		ORDER BY
+-- 			price
+-- 	) AS lowest_price_per_group
+-- FROM
+-- 	products
+-- INNER JOIN product_groups USING (group_id);
+
+-- SELECT
+-- 	product_name,
+-- 	group_name,
+-- 	price,
+-- 	LAST_VALUE (price) OVER (
+-- 		PARTITION BY group_name
+-- 		ORDER BY
+-- 			price RANGE BETWEEN UNBOUNDED PRECEDING
+-- 		AND UNBOUNDED FOLLOWING
+-- 	) AS highest_price_per_group
+-- FROM
+-- 	products
+-- INNER JOIN product_groups USING (group_id);
+
+-- SELECT
+-- 	product_name,
+-- 	group_name,
+-- 	price,
+-- 	LAG (price, 1) OVER (
+-- 		PARTITION BY group_name
+-- 		ORDER BY
+-- 			price
+-- 	) AS prev_price,
+-- 	price - LAG (price, 1) OVER (
+-- 		PARTITION BY group_name
+-- 		ORDER BY
+-- 			price
+-- 	) AS cur_prev_diff
+-- FROM
+-- 	products
+-- INNER JOIN product_groups USING (group_id);
+
+SELECT 
+	product_name,
+	group_name,
+	price,
+	LEAD (price, 1) OVER (
+		PARTITION BY group_name
+		ORDER BY
+			price
+	) AS next_price,
+	price - LEAD (price, 1) OVER (
+		PARTITION BY group_name
+		ORDER BY
+			price
+	) AS cur_next_diff
+FROM
+	products
+INNER JOIN product_groups USING (group_id);
