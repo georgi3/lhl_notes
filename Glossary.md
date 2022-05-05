@@ -6,7 +6,7 @@
 
 * Supervised VS Unsupervised 
   * In supervised we need to know the labels of the columns
-  * In Unsupervised we don't need to know the name of the columns
+  * In unsupervised we don't need to know the name of the columns
   
 * Gaussian Distribution
   * Could be plotted
