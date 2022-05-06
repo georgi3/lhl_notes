@@ -12,3 +12,10 @@
   * Could be plotted
   * mean == median == mode
   * Shapiro-Wilk test
+
+* PDF - probability density function
+* Bias Variance Trade off
+* Three Ensemble Techniques
+  * Bagging
+  * Boosting 
+  * Stacking
